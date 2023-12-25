@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./front-end
+    ports:
+      - "5170:5170"
+
