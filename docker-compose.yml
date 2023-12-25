@@ -6,4 +6,11 @@ services:
       context: ./front-end
     ports:
       - "5170:5170"
+    depends_on:
+      - backend
+  backend:
+    build:
+      context: ./back-end
+    ports:
+      - "3000:3000"
 
