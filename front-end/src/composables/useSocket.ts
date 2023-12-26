@@ -1,25 +1,19 @@
-import { ref } from 'vue'
+import { reactive } from 'vue'
 import { io } from 'socket.io-client'
 
-export function useSocket(serverUrl) {
-  const socket = ref(null)
+export const state = reactive({
+  connected: false,
+  messages: []
+})
 
-  // Connect to the socket server
-  const connect = () => {
-    socket.value = io(serverUrl)
-  }
+const URL = 'http://localhost:3000'
 
-  // Disconnect from the socket server
-  const disconnect = () => {
-    if (socket.value) {
-      socket.value.disconnect()
-    }
-  }
+export const socket = io(URL)
 
-  // Expose the socket instance
-  return {
-    socket,
-    connect,
-    disconnect
-  }
-}
+socket.on('connect', () => {
+  state.connected = true
+})
+
+socket.on('disconnect', () => {
+  state.connected = false
+})
