@@ -2,6 +2,7 @@ import http from "node:http";
 import express  from "express";
 import cors from "cors";
 import loginAPI from "./modules/login/api.js";
+import { authenticateJWT } from "./modules/auth/jwt.js";
 
 const PORT = 3000
 
@@ -11,6 +12,7 @@ app.use(express.json())
 
 // RESTful Routes
 app.use(loginAPI)
+
 
 export const server = http.createServer(app)
 

@@ -1,45 +1,55 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { useSocket } from '@/composables/useSocket' // Assuming you have the useSocket composable
+import axios from 'axios'
+// import { useSocket } from '@/composables/useSocket' // Assuming you have the useSocket composable
 
 const username = ref('')
-const authenticated = ref(false)
+let authenticated = ref(false)
 const onlineUsers = ref([])
 const messages = ref([])
 const newMessage = ref('')
+let accessTokenClient = ref('')
 
-const { socket, connect, disconnect } = useSocket('http://localhost:3000')
+// const { socket, connect, disconnect } = useSocket('http://localhost:3000')
 
 const login = () => {
-  // For simplicity, assume successful login
-  authenticated.value = true
+  axios
+    .post('http://localhost:3000/login')
+    .then((response) => {
+      const { accessToken } = response.data
+      accessTokenClient.value = accessToken
+      authenticated.value = true
+    })
+    .catch((error) => {
+      console.error('Login error:', error)
+    })
 }
 
-const sendMessage = () => {
-  socket.emit('message', { text: newMessage.value, username: username.value })
-  messages.value.push({ text: newMessage.value, username: username.value })
-  newMessage.value = ''
-}
+// const sendMessage = () => {
+//   socket.emit('message', { text: newMessage.value, username: username.value })
+//   messages.value.push({ text: newMessage.value, username: username.value })
+//   newMessage.value = ''
+// }
 
-onMounted(() => {
-  connect()
+// onMounted(() => {
+//   connect()
 
-  socket.on('message', (data) => {
-    messages.value.push(data)
-  })
+//   socket.on('message', (data) => {
+//     messages.value.push(data)
+//   })
 
-  socket.on('onlineUsers', (users) => {
-    onlineUsers.value = users
-  })
+//   socket.on('onlineUsers', (users) => {
+//     onlineUsers.value = users
+//   })
 
-  socket.on('disconnect', () => {
-    authenticated.value = false
-  })
-})
+//   socket.on('disconnect', () => {
+//     authenticated.value = false
+//   })
+// })
 
-onBeforeUnmount(() => {
-  disconnect()
-})
+// onBeforeUnmount(() => {
+//   disconnect()
+// })
 </script>
 
 <template>
@@ -48,6 +58,8 @@ onBeforeUnmount(() => {
       <div class="flex">
         <div class="w-1/4">
           <div>
+            <h2>Current User: {{ username }}</h2>
+
             <h2 class="text-lg font-semibold mb-2">Online Users</h2>
             <ul>
               <li v-for="user in onlineUsers" :key="user.id">{{ user.username }}</li>
