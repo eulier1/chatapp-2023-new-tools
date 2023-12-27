@@ -2,19 +2,15 @@ import { createServer } from "node:http";
 import cors from "cors";
 
 // Express Imports
-import express  from "express";
-import loginAPI from "./modules/login/api.js";
-import { authenticateJWT } from "./modules/auth/jwt.js";
+import app from "./src/config/express.ts";
+import loginAPI from "./src/routes/login.js";
+import { authenticateJWT } from "./src/utils/auth/jwt.js";
 
 // Socket Imports
 import { Server } from "socket.io";
-import { ioConnections } from "./modules/chat/handlers.js";
+import { ioConnections } from "./src/config/socket.ts";
 
 const PORT = 3000
-
-export const app = express()
-app.use(cors())
-app.use(express.json())
 
 export const server = createServer(app)
 export const io = new Server(server, {

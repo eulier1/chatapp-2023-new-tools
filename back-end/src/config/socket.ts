@@ -1,4 +1,4 @@
-import { messageHandler } from "./messages/handler.js";
+import { messageHandler } from "../handlers/message.js";
 
 const users = []
 

@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { SECRET_KEY } from "../auth/jwt.js";
+import { SECRET_KEY } from "../utils/auth/jwt.js";
 
 export const loginController = (req, res) => {
 
