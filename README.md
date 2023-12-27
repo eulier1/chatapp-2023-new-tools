@@ -34,4 +34,6 @@ For such reason, I favor [MongoAltas](https://www.mongodb.com/atlas/database).
 
 ### Demo
 
-![Demo](https://i.imgflip.com/8amcfj.gif)
+WIP
+
+🏗️ A preview url
