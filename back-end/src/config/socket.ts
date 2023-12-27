@@ -1,4 +1,5 @@
 import { createMessage } from "../handlers/message";
+import { authenticateJWTSocket } from "../utils/auth/socket";
 
 const users = []
 

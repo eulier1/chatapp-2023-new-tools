@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import axios from 'axios'
-import { socket, state } from '@/composables/useSocket' // Assuming you have the useSocket composable
+import { createSocket, state, URL } from '@/composables/useSocket' // Assuming you have the useSocket composable
 
 const username = ref('')
 let authenticated = ref(false)
 const onlineUsers = computed(() => state.onlineUsers)
 const messages = computed(() => state.messages)
+const socket = computed(() => state.socket)
 const newMessage = ref('')
 let user: Ref<{
   id: string
@@ -22,6 +23,8 @@ const login = () => {
     .then((response) => {
       const { accessToken, newUser } = response.data
       accessTokenClient.value = accessToken
+      //@ts-ignore
+      createSocket(URL, accessToken)
       authenticated.value = true
       user.value = newUser
     })
@@ -31,7 +34,7 @@ const login = () => {
 }
 
 const sendMessage = () => {
-  socket.emit('create_message', { text: newMessage.value, user: user.value })
+  socket.value.emit('create_message', { text: newMessage.value, user: user.value })
   newMessage.value = ''
 }
 </script>
@@ -43,7 +46,7 @@ const sendMessage = () => {
         <div class="w-1/4">
           <div>
             <h1>Current User: {{ username }}</h1>
-            <p>connected? : {{ socket.connected ? '🟢' : '🔴' }}</p>
+            <p>connected? : {{ state.connected ? '🟢' : '🔴' }}</p>
             <br />
             <h2 class="text-lg font-semibold mb-2">
               Online Users: <strong />{{ onlineUsers.length }}<strong />

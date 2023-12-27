@@ -1,5 +1,5 @@
-import { reactive } from 'vue'
-import { io } from 'socket.io-client'
+import { reactive, shallowRef } from 'vue'
+import { Socket, io } from 'socket.io-client'
 
 interface Message {
   text: string
@@ -16,32 +16,45 @@ interface useSocket {
   user: {}
   messages: Array<Message>
   onlineUsers: User[]
+  token: string
+  socket: {}
 }
 
 export const state: useSocket = reactive({
   connected: false,
   user: {},
   messages: [],
-  onlineUsers: []
+  onlineUsers: [],
+  token: '',
+  socket: {}
 })
 
-const URL = 'http://localhost:3000'
+export const URL = 'http://localhost:3000'
 
-export const socket = io(URL)
+export const createSocket = (host: string, token: string) => {
+  const socket = shallowRef(
+    io(URL, {
+      auth: {
+        token
+      }
+    })
+  )
 
-socket.on('connect', () => {
-  state.connected = true
-})
+  socket.value.on('connect', () => {
+    state.socket = socket.value
+    state.connected = true
+  })
 
-socket.on('create_message', ({ text, user }) => {
-  const message = { text, username: user.name }
-  state.messages.push(message)
-})
+  socket.value.on('create_message', ({ text, user }) => {
+    const message = { text, username: user.name }
+    state.messages.push(message)
+  })
 
-socket.on('disconnect', () => {
-  state.connected = false
-})
+  socket.value.on('disconnect', () => {
+    state.connected = false
+  })
 
-socket.on('users_connected', (users) => {
-  state.onlineUsers = users
-})
+  socket.value.on('users_connected', (users) => {
+    state.onlineUsers = users
+  })
+}
