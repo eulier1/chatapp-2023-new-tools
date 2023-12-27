@@ -8,22 +8,12 @@ services:
       - "5170:5170"
     depends_on:
       - backend
+
   backend:
     build:
       context: ./back-end
     ports:
       - "3000:3000"
-    depends_on:
-      - database
     environment:
-      MONGO_URI: "mongodb://root:example@localhost:27017/chatDB"
-  database:
-    image: 'bitnami/mongodb:latest'
-    environment:
-      - MONGODB_ADVERTISED_HOSTNAME=127.0.0.1
-      - MONGODB_REPLICA_SET_MODE=primary
-      - MONGODB_ROOT_USER=root
-      - MONGODB_ROOT_PASSWORD=example
-      - MONGODB_REPLICA_SET_KEY=replicasetkey123
-    ports:
-      - '27017:27017'
+      DATABASE_URL: "mongodb+srv://eulier1:WOtGOCDspUtNJWSD@cluster0.lhvp0ii.mongodb.net/chatDB"
+    restart: unless-stopped

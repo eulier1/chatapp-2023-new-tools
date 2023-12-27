@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "prisma": {
-    "seed": "npx ts-node src/prisma/seed"
+    "schema": "prisma/schema.prisma",
+    "seed": "npx ts-node prisma/seed"
   },
   "scripts": {
     "dev": "npx ts-node server.ts localhost 3000",

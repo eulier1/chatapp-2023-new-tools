@@ -1,21 +1,19 @@
-import { messageHandler } from "../handlers/message.js";
+import { createMessage } from "../handlers/message";
 
 const users = []
 
-export const ioConnections = ({io}) => (socket) => {
+export const ioConnections = ({io}) => async (socket) => {
 
-    console.log('User connected:', socket.id);
     users.push(socket.id)
-    console.log(users.length)
+    io.emit('users_connected', users)
     
     // Mmessages
-    socket.on('message', messageHandler({io}));
+    socket.on('create_message', createMessage(io));
 
     // Handle disconnection
     socket.on('disconnect', () => {
         const userIdIndex = users.findIndex( (userid) => userid === socket.id)
         users.splice(userIdIndex, 1)
-        console.log('User disconnected:', socket.id);
-        console.log(users.length)
+        io.emit('users_connected', users)
     });
 }

@@ -13,8 +13,8 @@ datasource db {
 model User {
   id      String    @id @default(auto()) @map("_id") @db.ObjectId
   name    String
-  userId  String
-  email   String
+  userId  String?
+  email   String?
   message Message[]
 }
 
@@ -23,6 +23,6 @@ model Message {
   data      String
   userId    String   @db.ObjectId
   createdAt DateTime @default(now())
-  updatedAt DateTime
-  user      User     @relation(fields: [userId], references: [id])
+  updatedAt DateTime?
+  user      User?     @relation(fields: [userId], references: [id])
 }
